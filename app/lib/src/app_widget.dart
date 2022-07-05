@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider_start/src/core/services/client_http.dart';
+import 'package:provider_start/src/features/auth/auth_controller.dart';
 
 import 'features/auth/auth_page.dart';
 import 'features/home/home_page.dart';
@@ -9,18 +12,24 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        Provider(create: (_) => ClientHttp()),
+        ChangeNotifierProvider(create: (context) => AuthController(context.read())),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (_) => const SplashPage(),
+          '/auth': (_) => const AuthPage(),
+          '/home': (_) => const HomePage(),
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (_) => const SplashPage(),
-        '/auth': (_) => const AuthPage(),
-        '/home': (_) => const HomePage(),
-      },
     );
   }
 }
